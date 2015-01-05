@@ -1,0 +1,33 @@
+body {
+    padding-top: 50px;
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+
+    /*
+      Introduced in IE 10.
+      See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+    */
+    -ms-user-select: none;
+    user-select: none;
+}
+.game {
+    padding: 15px;
+}
+
+.panel {
+    padding: 5px 15px;
+}
+
+.evo-canvas {
+    width: 640px;
+    height: 480px;
+    border: 1px solid #000;
+    margin: 25px auto;
+    display: block;
+}
+
+.progress.active .progress-bar {
+    -webkit-transition: none !important;
+    transition: none !important;
+}
