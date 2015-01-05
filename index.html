@@ -50,39 +50,118 @@
 
     <div class="col-md-4">
         <div class="stats panel panel-default">
-            <h5>Points: <span class="totalPoints"></span></h5>
-            <h5>PPS: <span class="multiplier"></span></h5>
+            <div class="panel-heading">Stats</div>
+            <div class="panel-body">
+                <h5>Points: <span class="totalPoints"></span></h5>
+                <h5>PPS: <span class="multiplier"></span></h5>
+                <h5>Germs Created: <span class="totalGerms"></span></h5>
+            </div>
+        </div>
+
+        <div class="panel panel-default actions experiments">
+            <div class="panel-heading">
+                Experiments
+            </div>
+            <div class="panel-body">
+
+                <div class="running-experiment progress">
+                    <div class="experiment progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                        <span class="experiment-percent"></span>
+                    </div>
+                </div>
+
+                <button class="btn addMultiplier experiment rat" data-cost="2000" data-add="500" data-name="rat" data-time="60" disabled>
+                    Test On Rats
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
+
+                <button class="btn addMultiplier experiment pig" data-cost="8000" data-add="800" data-name="pig" data-time="120" disabled>
+                    Test On Pigs
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
+
+                <button class="btn addMultiplier experiment human" data-cost="15000" data-add="1100" data-name="human" data-time="240" disabled>
+                    Test On Humans
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
+            </div>
+        </div>
+
+        <div class="dev panel panel-default">
+            <div class="panel-heading">Dev</div>
+
+            <div class="panel-body">
+                <div class="btn-group">
+                    <button class="btn addMultiplier reproduce" data-cost="0" data-add="50" data-name="reproduce">Reproduce</button>
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="2">x2</a></li>
+                        <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="10">x10</a></li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div class="col-md-8">
         <div class="actions panel panel-default">
-            <button class="btn addMultiplier dna" data-cost="1" data-add="0.5" data-name="dna" disabled>
-                Buy DNA
-                <br />
-                <small>
-                    +<span class="add"></span> PPS -
-                    Cost: <span class="cost"></span>
-                </small>
-            </button>
+            <div class="panel-heading">
+                Bio Actions
+            </div>
 
-            <button class="btn addMultiplier mass" data-cost="2" data-add="1" data-name="mass" disabled>
-                Buy More Mass
-                <br />
-                <small>
-                    +<span class="add"></span> PPS -
-                    Cost: <span class="cost"></span>
-                </small>
-            </button>
+            <div class="panel-body">
+                <button class="btn addMultiplier dna" data-cost="1" data-add="0.5" data-name="dna" disabled>
+                    Buy DNA
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
 
-            <button class="btn addMultiplier reproduce" data-cost="25" data-add="10" data-name="reproduce" disabled>
-                Reproduce
-                <br />
-                <small>
-                    +<span class="add"></span> PPS -
-                    Cost: <span class="cost"></span>
-                </small>
-            </button>
+                <button class="btn addMultiplier strength" data-cost="2" data-add="1" data-name="strength" disabled>
+                    Increase Strength
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
+
+                <button class="btn addMultiplier resistance" data-cost="15" data-add="5" data-name="resistance" disabled>
+                    Increase Resistance
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
+
+                <button class="btn addMultiplier reproduce" data-cost="500" data-add="50" data-name="reproduce" disabled>
+                    Reproduce
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span>
+                    </small>
+                </button>
+            </div>
 
             <canvas class="evo-canvas" width="640" height="480"></canvas>
 

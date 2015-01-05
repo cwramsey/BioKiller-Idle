@@ -8,13 +8,17 @@ var evo = {
     multiplier: 0.5,
     barWidth: 0,
     totalGerms: 0,
+    experimentProgress: 0,
+    experimentTime: 0,
+    experimentsDisabled: false,
     germX: [],
     germY: [],
     buttons: [],
     germInterval: null,
+    experimentInterval: null,
 
     getButtons: function () {
-        $('.addMultiplier').each(function (key, val) {
+        $('.actions .addMultiplier').each(function (key, val) {
             $(this).find('.cost').text($(this).data('cost'));
             $(this).find('.add').text($(this).data('add'));
 
@@ -29,30 +33,72 @@ var evo = {
             var cost = parseFloat($('.addMultiplier.' + val).data('cost'));
 
             if (evo.totalPoints < cost) {
-                //enable the button
+                //disable the button
                 $('.addMultiplier.' + val).prop('disabled', true).css('opacity', '0.5');
             } else {
-                //disable the button
-                $('.addMultiplier.' + val).prop('disabled', false).css('opacity', '1');
+                //enable the button
+
+                if ($('.addMultiplier.' + val).hasClass('experiment') && evo.experimentsDisabled == true) {
+                    $('.addMultiplier.' + val).prop('disabled', true).css('opacity', '0.5');
+                } else {
+                    $('.addMultiplier.' + val).prop('disabled', false).css('opacity', '1');
+                }
             }
         })
     },
 
+    addMultiplier: function(button) {
+        var clicked = '.' + button;
+
+        $(clicked).prop('disabled', true);
+
+        if ($(clicked).hasClass('experiment')) {
+            evo.runExperiment(clicked);
+            return true;
+        }
+
+        var add = parseFloat($(clicked).data('add'));
+        var cost = parseFloat($(clicked).data('cost'));
+
+        if (evo.totalPoints > cost) {
+            evo.multiplier = evo.multiplier + add;
+            evo.totalPoints = evo.totalPoints - cost;
+            evo.roundPoints();
+
+            $('.totalPoints').text(evo.totalPoints);
+            $('.multiplier').text(evo.multiplier);
+
+            evo.increaseCost(clicked);
+        } else {
+            //fail purchase
+        }
+
+        if ($(clicked).hasClass('reproduce')) {
+            if ($(clicked).data('multiple')) {
+                for (var i = 0; i <= $(clicked).data('multiple'); i++) {
+                    evo.makeGerm();
+                }
+            } else {
+                evo.makeGerm();
+            }
+        }
+    },
+
     //increase the cost of the button purchase by 0.3%
     increaseCost: function (btn) {
-        var oldCost = parseFloat($('.' + btn).data('cost'));
+        var oldCost = parseFloat($(btn).data('cost'));
         var newCost = oldCost + (oldCost * 0.3);
 
         //round to 2 decimals
         newCost = Math.round((newCost + 0.00001) * 100) / 100;
 
-        $('.' + btn).data('cost', newCost);
-        $('.' + btn + ' .cost').text(newCost);
+        $(btn).data('cost', newCost);
+        $(btn + ' .cost').text(newCost);
 
         if (evo.totalPoints < newCost) {
-            $('.' + btn).prop('disabled', true).css('opacity', '0.5');
+            $(btn).prop('disabled', true).css('opacity', '0.5');
         } else {
-            $('.' + btn).prop('disabled', false);
+            $(btn).prop('disabled', false);
         }
     },
 
@@ -64,6 +110,7 @@ var evo = {
         setTimeout(function() {
             evo.totalGerms++;
             var thisGerm = evo.totalGerms -1;
+            $('.totalGerms').text(evo.totalGerms);
 
             if (evo.totalGerms == 1) {
                 evo.germX[0] = 50;
@@ -110,31 +157,70 @@ var evo = {
 
             if (x < canvasWidth - 50 && x >= 50) {
                 if (forwardOrBackward == 1) {
-                    evo.germX[key] = evo.germX[key] + Math.floor((Math.random() * 10) + 1);
+                    evo.germX[key] = evo.germX[key] + Math.floor((Math.random() * 30) + 1);
                 } else {
-                    evo.germX[key] = evo.germX[key] - Math.floor((Math.random() * 10) + 1);
+                    evo.germX[key] = evo.germX[key] - Math.floor((Math.random() * 30) + 1);
                 }
             } else {
                 if (x >= canvasWidth - 50) {
-                    evo.germX[key] = evo.germX[key] - Math.floor((Math.random() * 10) + 1);
+                    evo.germX[key] = evo.germX[key] - Math.floor((Math.random() * 30) + 1);
                 } else if (x <= 50) {
-                    evo.germX[key] = evo.germX[key] + Math.floor((Math.random() * 10) + 1);
+                    evo.germX[key] = evo.germX[key] + Math.floor((Math.random() * 30) + 1);
                 }
             }
 
             if (y < canvasHeight - 50 && y >= 50) {
                 if (forwardOrBackward == 1) {
-                    evo.germY[key] = evo.germY[key] + Math.floor((Math.random() * 10) + 1);
+                    evo.germY[key] = evo.germY[key] + Math.floor((Math.random() * 30) + 1);
                 } else {
-                    evo.germY[key] = evo.germY[key] - Math.floor((Math.random() * 10) + 1);
+                    evo.germY[key] = evo.germY[key] - Math.floor((Math.random() * 30) + 1);
                 }
             } else {
                 if (y >= canvasHeight - 50) {
-                    evo.germY[key] = evo.germY[key] - Math.floor((Math.random() * 10) + 1);
+                    evo.germY[key] = evo.germY[key] - Math.floor((Math.random() * 30) + 1);
                 } else if (y <= 50) {
-                    evo.germY[key] = evo.germY[key] + Math.floor((Math.random() * 10) + 1);
+                    evo.germY[key] = evo.germY[key] + Math.floor((Math.random() * 30) + 1);
                 }
             }
         });
+    },
+
+    runExperiment: function(experiment) {
+        evo.experimentTime = $(experiment).data('time');
+        evo.experimentProgress = 0;
+        $('.experiment').prop('disabled', true);
+        evo.experimentsDisabled = true;
+
+        evo.experimentInterval = setInterval(function() {
+            evo.experimentProgress++;
+
+            var percent = evo.experimentProgress / evo.experimentTime * 100;
+
+            if (percent < 100) {
+                $('.experiment.progress-bar').width(percent + '%');
+            } else {
+                clearInterval(evo.experimentInterval);
+                evo.experimentsDisabled = false;
+                $('.experiment.progress-bar').width('0%');
+
+                var add = parseFloat($(experiment).data('add'));
+                var cost = parseFloat($(experiment).data('cost'));
+
+                if (evo.totalPoints > cost) {
+                    evo.multiplier = evo.multiplier + add;
+                    evo.totalPoints = evo.totalPoints - cost;
+                    evo.roundPoints();
+
+                    $('.totalPoints').text(evo.totalPoints);
+                    $('.multiplier').text(evo.multiplier);
+
+                    evo.increaseCost(experiment);
+                } else {
+                    //fail purchase
+                }
+
+                evo.setButtonStates();
+            }
+        }, 500);
     }
 };

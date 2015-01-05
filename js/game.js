@@ -4,6 +4,12 @@
 
 $(document).ready(function() {
 
+    var dev = 0;
+
+    if (dev != 1) {
+        $('.dev').remove();
+    }
+
     evo.getButtons();
     evo.makeGerm();
 
@@ -20,31 +26,8 @@ $(document).ready(function() {
     //add the multiplier
     $('.addMultiplier').click(function(e) {
         e.preventDefault();
-        $(this).prop('disabled', true);
 
+        evo.addMultiplier($(this).data('name'));
 
-        var add = parseFloat($(this).data('add'));
-        var cost = parseFloat($(this).data('cost'));
-
-        //console.log(cost);
-
-        if (evo.totalPoints > cost) {
-            evo.multiplier = evo.multiplier + add;
-            evo.totalPoints = evo.totalPoints - cost;
-            evo.roundPoints();
-
-            $('.totalPoints').text(evo.totalPoints);
-            $('.multiplier').text(evo.multiplier);
-
-            evo.increaseCost(e.currentTarget.dataset.name);
-        } else {
-            //fail purchase
-        }
-
-        if ($(this).hasClass('reproduce')) {
-            evo.makeGerm();
-        }
-
-        //console.log(e);
     })
 });
