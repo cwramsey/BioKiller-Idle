@@ -46,7 +46,7 @@ $(document).ready(function () {
     //save game every 30 seconds
     var saveGame = setInterval(function() {
         misc.saveGame();
-    }, 10 * 1000);
+    }, 60 * 1000);
 
     //add the multiplier
     $('.addMultiplier').click(function (e) {
