@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/styles.css" rel="stylesheet">
+    <link href="css/animate.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -53,86 +54,166 @@
             <div class="panel-body">
                 <h5>Points: <span class="totalPoints"></span></h5>
                 <h5>PPS: <span class="multiplier"></span></h5>
+                <h5>Contamination Chance: <span class="contaminationChance"></span></h5>
                 <h5>Germs Created: <span class="totalGerms"></span></h5>
             </div>
         </div>
 
-        <div class="panel panel-default actions experiments">
-            <div class="panel-heading">
-                Experiments
-            </div>
-            <div class="panel-body">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 
-                <div class="running-experiment progress">
-                    <div class="experiment progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                        <span class="experiment-percent"></span>
+            <!--EXPERIMENTS-->
+            <div class="panel panel-default experiments actions">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Experiments
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <div class="running-experiment progress">
+                            <div class="experiment progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                <span class="experiment-percent"></span>
+                            </div>
+                        </div>
+
+                        <button class="btn addMultiplier experiment rat" data-cost="2000" data-add="500" data-name="rat" data-time="60" disabled>
+                            Test On Rats
+                            <br />
+                            <small>
+                                +<span class="add"></span> PPS -
+                                Cost: <span class="cost"></span> -
+                                Time: <span class="time"></span> 
+                            </small>
+                        </button>
+
+                        <button class="btn addMultiplier experiment pig" data-cost="8000" data-add="1100" data-name="pig" data-time="120" disabled>
+                            Test On Pigs
+                            <br />
+                            <small>
+                                +<span class="add"></span> PPS -
+                                Cost: <span class="cost"></span> -
+                                Time: <span class="time"></span> 
+                            </small>
+                        </button>
+
+                        <button class="btn addMultiplier experiment horse" data-cost="25000" data-add="3000" data-name="horse" data-time="240" disabled>
+                            Test On Horses
+                            <br />
+                            <small>
+                                +<span class="add"></span> PPS -
+                                Cost: <span class="cost"></span> -
+                                Time: <span class="time"></span> 
+                            </small>
+                        </button>
+
+                        <button class="btn addMultiplier experiment human" data-cost="100000" data-add="8000" data-name="human" data-time="360" disabled>
+                            Test On Humans
+                            <br />
+                            <small>
+                                +<span class="add"></span> PPS -
+                                Cost: <span class="cost"></span> -
+                                Time: <span class="time"></span> 
+                            </small>
+                        </button>
                     </div>
                 </div>
-
-                <button class="btn addMultiplier experiment rat" data-cost="2000" data-add="500" data-name="rat" data-time="60" disabled>
-                    Test On Rats
-                    <br />
-                    <small>
-                        +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span> -
-                        Time: <span class="time"></span> seconds
-                    </small>
-                </button>
-
-                <button class="btn addMultiplier experiment pig" data-cost="8000" data-add="1100" data-name="pig" data-time="120" disabled>
-                    Test On Pigs
-                    <br />
-                    <small>
-                        +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span> -
-                        Time: <span class="time"></span> seconds
-                    </small>
-                </button>
-
-                <button class="btn addMultiplier experiment horse" data-cost="25000" data-add="3000" data-name="horse" data-time="240" disabled>
-                    Test On Horses
-                    <br />
-                    <small>
-                        +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span> -
-                        Time: <span class="time"></span> seconds
-                    </small>
-                </button>
-
-                <button class="btn addMultiplier experiment human" data-cost="100000" data-add="8000" data-name="human" data-time="360" disabled>
-                    Test On Humans
-                    <br />
-                    <small>
-                        +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span> -
-                        Time: <span class="time"></span> seconds
-                    </small>
-                </button>
             </div>
-        </div>
 
-        <div class="dev panel panel-default" style="display: none;">
-            <div class="panel-heading">Dev</div>
-
-            <div class="panel-body">
-
-                <!--Reproduce Button-->
-                <div class="btn-group">
-                    <button class="btn addMultiplier reproduce" data-cost="0" data-add="50" data-name="reproduce">Reproduce</button>
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        <span class="caret"></span>
-                        <span class="sr-only">Toggle Dropdown</span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="2">x2</a></li>
-                        <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="10">x10</a></li>
-                    </ul>
+            <!--LAB EQUIPMENT-->
+            <div class="panel panel-default equipment">
+                <div class="panel-heading" role="tab" id="headingTwo">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Lab Equipment
+                        </a>
+                    </h4>
                 </div>
+                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                    <div class="panel-body actions">
 
-                <!--Add Points-->
-                <button class="btn addPoints">Add Points</button>
+                        <div class="equipment-delivery progress">
+                            <div class="equipment progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                <span class="equipment-percent"></span>
+                            </div>
+                        </div>
+
+                        <p>Lab equipment helps protect you against contaminations.</p>
+                        <p><small>CP = Contaminant Protection %</small></p>
+
+                        <button class="btn addEquipment equipment hazmat" data-cost="10000" data-add="1.2" data-name="hazmat" data-time="230" disabled>
+                            Buy HazMat Suit
+                            <br />
+                            <small>
+                                +<span class="add"></span> CP -
+                                Cost: <span class="cost"></span> -
+                                Delivery Time: <span class="time"></span> 
+                            </small>
+                        </button>
+
+                        <button class="btn addEquipment equipment freezer" data-cost="25000" data-add="1.6" data-name="freezer" data-time="470" disabled>
+                            Buy Freezer
+                            <br />
+                            <small>
+                                +<span class="add"></span> CP -
+                                Cost: <span class="cost"></span> -
+                                Delivery Time: <span class="time"></span> 
+                            </small>
+                        </button>
+
+                        <button class="btn addEquipment equipment janitor" data-cost="100000" data-add="2.2" data-name="janitor" data-time="710" disabled>
+                            Hire Janitor
+                            <br />
+                            <small>
+                                +<span class="add"></span> CP -
+                                Cost: <span class="cost"></span> -
+                                Delivery Time: <span class="time"></span>
+                            </small>
+                        </button>
+
+                        <button class="btn addEquipment equipment solution" data-cost="220000" data-add="3.1" data-name="solution" data-time="1020" disabled>
+                            Buy Organic Cleaning Solution
+                            <br />
+                            <small>
+                                +<span class="add"></span> CP -
+                                Cost: <span class="cost"></span> -
+                                Delivery Time: <span class="time"></span>
+                            </small>
+                        </button>
+                    </div>
+                </div>
             </div>
 
+            <!--DEV PANEL-->
+            <div class="panel panel-default dev">
+                <div class="panel-heading" role="tab" id="headingThree">
+                    <h4 class="panel-title">
+                        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Dev
+                        </a>
+                    </h4>
+                </div>
+                <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                    <div class="panel-body">
+                        <!--Reproduce Button-->
+                        <div class="btn-group">
+                            <button class="btn addMultiplier reproduce" data-cost="0" data-add="50" data-name="reproduce">Reproduce</button>
+                            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="2">x2</a></li>
+                                <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="10">x10</a></li>
+                            </ul>
+                        </div>
+
+                        <!--Add Points-->
+                        <button class="btn addPoints">Add Points</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -221,7 +302,9 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="js/jquery.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-growl.min.js"></script>
 <script src="js/fabric.js" ></script>
+<script src="js/misc.js" ></script>
 <script src="js/evo.js"></script>
 <script src="js/game.js"></script>
 </body>
