@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/styles.css" rel="stylesheet">
+    <link href="css/bootstrap-tour.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -38,9 +39,8 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li class="active"><a href="index.html">Home</a></li>
+                <li><a href="https://github.com/cwramsey/BioKiller-Idle" target="_blank">GitHub</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -65,7 +65,7 @@
             <div class="panel-body">
 
                 <div class="running-experiment progress">
-                    <div class="experiment progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                    <div class="experiment progress-bar progress-bar-striped progress-bar-success active" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
                         <span class="experiment-percent"></span>
                     </div>
                 </div>
@@ -75,7 +75,8 @@
                     <br />
                     <small>
                         +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span>
+                        Cost: <span class="cost"></span> -
+                        Time: <span class="time"></span> seconds
                     </small>
                 </button>
 
@@ -84,16 +85,28 @@
                     <br />
                     <small>
                         +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span>
+                        Cost: <span class="cost"></span> -
+                        Time: <span class="time"></span> seconds
                     </small>
                 </button>
 
-                <button class="btn addMultiplier experiment human" data-cost="15000" data-add="1100" data-name="human" data-time="240" disabled>
+                <button class="btn addMultiplier experiment horse" data-cost="15000" data-add="1000" data-name="horse" data-time="240" disabled>
+                    Test On Horses
+                    <br />
+                    <small>
+                        +<span class="add"></span> PPS -
+                        Cost: <span class="cost"></span> -
+                        Time: <span class="time"></span> seconds
+                    </small>
+                </button>
+
+                <button class="btn addMultiplier experiment human" data-cost="17000" data-add="1200" data-name="human" data-time="360" disabled>
                     Test On Humans
                     <br />
                     <small>
                         +<span class="add"></span> PPS -
-                        Cost: <span class="cost"></span>
+                        Cost: <span class="cost"></span> -
+                        Time: <span class="time"></span> seconds
                     </small>
                 </button>
             </div>
@@ -103,6 +116,8 @@
             <div class="panel-heading">Dev</div>
 
             <div class="panel-body">
+
+                <!--Reproduce Button-->
                 <div class="btn-group">
                     <button class="btn addMultiplier reproduce" data-cost="0" data-add="50" data-name="reproduce">Reproduce</button>
                     <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -114,6 +129,9 @@
                         <li><a href="#" class="addMultiplier dev-reproduce" data-cost="0" data-add="50" data-name="dev-reproduce" data-multiple="10">x10</a></li>
                     </ul>
                 </div>
+
+                <!--Add Points-->
+                <button class="btn addPoints">Add Points</button>
             </div>
 
         </div>
@@ -126,8 +144,8 @@
             </div>
 
             <div class="panel-body">
-                <button class="btn addMultiplier dna" data-cost="1" data-add="0.5" data-name="dna" disabled>
-                    Buy DNA
+                <button class="btn addMultiplier dna" data-cost="1" data-add="0.1" data-name="dna" disabled>
+                    Test New DNA Strand
                     <br />
                     <small>
                         +<span class="add"></span> PPS -
@@ -135,7 +153,7 @@
                     </small>
                 </button>
 
-                <button class="btn addMultiplier strength" data-cost="2" data-add="1" data-name="strength" disabled>
+                <button class="btn addMultiplier strength" data-cost="20" data-add="1" data-name="strength" disabled>
                     Increase Strength
                     <br />
                     <small>
@@ -144,7 +162,7 @@
                     </small>
                 </button>
 
-                <button class="btn addMultiplier resistance" data-cost="15" data-add="5" data-name="resistance" disabled>
+                <button class="btn addMultiplier resistance" data-cost="50" data-add="5" data-name="resistance" disabled>
                     Increase Resistance
                     <br />
                     <small>
@@ -153,7 +171,7 @@
                     </small>
                 </button>
 
-                <button class="btn addMultiplier reproduce" data-cost="500" data-add="50" data-name="reproduce" disabled>
+                <button class="btn addMultiplier reproduce" data-cost="500" data-add="20" data-name="reproduce" disabled>
                     Reproduce
                     <br />
                     <small>
@@ -173,7 +191,34 @@
 
 </div><!-- /.container -->
 
+<!-- Large modal -->
+<div class="modal start-modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">BioKiller Idle</h4>
+            </div>
+            <div class="modal-body">
+                <p>Hello Doctor.</p>
+                <p>Welcome to your laboratory. Here is where you will be crafting a designer virus that will take out the entire world population - except yourself.</p>
+                <p>You'll finally have the peace and quiet you deserve once you finish your latest (and greatest) masterpiece.</p>
+                <p>To get started, just click the button below and start experimenting with your new BioKiller.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Get Started</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
+<ol id="tour" style="display: none;" data-joyride>
+    <li data-class="totalPoints">You'll be using what we in the science community call "points" to upgrade your viral killer.</li>
+    <li data-class="multiplier">You can keep track of the points you earn every second here.</li>
+    <li data-class="dna">Upgrade your virus here by purchasing improvements to your BioKiller.</li>
+    <li data-class="dna">And, of course you'll need a way to know how deadly your virus is. Use experiments for huge boosts in points. But beware... it can take a while to finish your experiments.</li>
+    <li data-class="evo-canvas">Lastly, you can watch your little bugs run amock here.</li>
+</ol>
 
 
 <!-- Bootstrap core JavaScript
@@ -182,6 +227,7 @@
 <script src="js/jquery.js"></script>
 <script src="js/jcanvas.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
+<script src="js/bootstrap-tour.min.js"></script>
 <script src="js/evo.js"></script>
 <script src="js/game.js"></script>
 </body>

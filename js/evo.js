@@ -5,7 +5,8 @@ var evo = {
 
     //variables
     totalPoints: 0,
-    multiplier: 0.5,
+    multiplier: 0.1,
+    time: 1,
     barWidth: 0,
     totalGerms: 0,
     experimentProgress: 0,
@@ -21,6 +22,10 @@ var evo = {
         $('.actions .addMultiplier').each(function (key, val) {
             $(this).find('.cost').text($(this).data('cost'));
             $(this).find('.add').text($(this).data('add'));
+
+            if ($(this).has('.time').length) {
+                $(this).find('.time').text($(this).data('time'));
+            }
 
             evo.buttons.push($(this).data('name'));
         });
@@ -47,7 +52,7 @@ var evo = {
         })
     },
 
-    addMultiplier: function(button) {
+    addMultiplier: function (button) {
         var clicked = '.' + button;
 
         $(clicked).prop('disabled', true);
@@ -61,9 +66,8 @@ var evo = {
         var cost = parseFloat($(clicked).data('cost'));
 
         if (evo.totalPoints > cost) {
-            evo.multiplier = evo.multiplier + add;
-            evo.totalPoints = evo.totalPoints - cost;
-            evo.roundPoints();
+            evo.multiplier = evo.roundIt(evo.multiplier + add);
+            evo.totalPoints = evo.roundIt(evo.totalPoints - cost);
 
             $('.totalPoints').text(evo.totalPoints);
             $('.multiplier').text(evo.multiplier);
@@ -87,10 +91,7 @@ var evo = {
     //increase the cost of the button purchase by 0.3%
     increaseCost: function (btn) {
         var oldCost = parseFloat($(btn).data('cost'));
-        var newCost = oldCost + (oldCost * 0.3);
-
-        //round to 2 decimals
-        newCost = Math.round((newCost + 0.00001) * 100) / 100;
+        var newCost = evo.roundIt(oldCost + (oldCost * 0.3));
 
         $(btn).data('cost', newCost);
         $(btn + ' .cost').text(newCost);
@@ -102,14 +103,15 @@ var evo = {
         }
     },
 
-    roundPoints: function () {
-        evo.totalPoints = Math.round((evo.totalPoints + 0.00001) * 100) / 100;
+    roundIt: function (num) {
+        num = Math.round((num + 0.00001) * 100) / 100;
+        return num;
     },
 
     makeGerm: function () {
-        setTimeout(function() {
+        setTimeout(function () {
             evo.totalGerms++;
-            var thisGerm = evo.totalGerms -1;
+            var thisGerm = evo.totalGerms - 1;
             $('.totalGerms').text(evo.totalGerms);
 
             if (evo.totalGerms == 1) {
@@ -127,7 +129,8 @@ var evo = {
                 name: 'germ' + thisGerm,
                 x: evo.germX[thisGerm],
                 y: evo.germY[thisGerm],
-                scale: 0.5
+                scale: 0.5,
+                fillStyle: "#fff"
             });
 
             clearInterval(evo.germInterval);
@@ -185,19 +188,20 @@ var evo = {
         });
     },
 
-    runExperiment: function(experiment) {
+    runExperiment: function (experiment) {
         evo.experimentTime = $(experiment).data('time');
         evo.experimentProgress = 0;
         $('.experiment').prop('disabled', true);
         evo.experimentsDisabled = true;
 
-        evo.experimentInterval = setInterval(function() {
+        evo.experimentInterval = setInterval(function () {
             evo.experimentProgress++;
 
             var percent = evo.experimentProgress / evo.experimentTime * 100;
 
             if (percent < 100) {
                 $('.experiment.progress-bar').width(percent + '%');
+                $('.experiment-percent').text(evo.roundIt(percent) + '%');
             } else {
                 clearInterval(evo.experimentInterval);
                 evo.experimentsDisabled = false;
@@ -209,7 +213,7 @@ var evo = {
                 if (evo.totalPoints > cost) {
                     evo.multiplier = evo.multiplier + add;
                     evo.totalPoints = evo.totalPoints - cost;
-                    evo.roundPoints();
+                    evo.roundIt();
 
                     $('.totalPoints').text(evo.totalPoints);
                     $('.multiplier').text(evo.multiplier);
@@ -221,6 +225,21 @@ var evo = {
 
                 evo.setButtonStates();
             }
-        }, 500);
+        }, 100);
+    },
+
+    start: function () {
+        $('.start-modal').modal('show');
+
+        //setup experiment tooltips
+        $('.experiment').tooltip({
+            placement: "right",
+            title: "Beware: You can only run one experiment at a time...",
+
+        })
+    },
+
+    addPoints: function() {
+        evo.totalPoints = evo.totalPoints + 5000;
     }
 };
