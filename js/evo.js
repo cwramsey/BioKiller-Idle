@@ -329,6 +329,15 @@ evo = {
         evo.experimentProgress = 0;
         $('.experiment').prop('disabled', true);
         evo.experimentsDisabled = true;
+        var cost = parseFloat($(experiment).data('cost'));
+
+        if (evo.totalPoints >= cost) {
+            evo.totalPoints = evo.roundIt(evo.totalPoints - cost);
+            $('.totalPoints').text(evo.totalPoints);
+            evo.increaseCost(experiment);
+        } else {
+            //fail purchase
+        }
 
         evo.experimentInterval = setInterval(function () {
             evo.experimentProgress++;
@@ -346,25 +355,14 @@ evo = {
 
                 $('.experiment-percent').text(showPercent + '%');
             } else {
+                var add = parseFloat($(experiment).data('add'));
+
                 clearInterval(evo.experimentInterval);
                 evo.experimentsDisabled = false;
                 $('.experiment.progress-bar').width('0%');
 
-                var add = parseFloat($(experiment).data('add'));
-                var cost = parseFloat($(experiment).data('cost'));
+                evo.multiplier = evo.roundIt(evo.multiplier + add);
 
-                if (evo.totalPoints >= cost) {
-                    evo.multiplier = evo.multiplier + add;
-                    evo.totalPoints = evo.totalPoints - cost;
-                    evo.roundIt();
-
-                    $('.totalPoints').text(evo.totalPoints);
-                    $('.multiplier').text(evo.multiplier);
-
-                    evo.increaseCost(experiment);
-                } else {
-                    //fail purchase
-                }
 
                 evo.setButtonStates();
             }
