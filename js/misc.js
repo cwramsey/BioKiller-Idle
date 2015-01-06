@@ -69,5 +69,44 @@ misc = {
             evo.contaminateChance = save.contaminateChance;
             evo.prices = save.prices;
         }
+    },
+
+    getCommits: function() {
+        var url = 'https://api.github.com/repos/cwramsey/biokiller-idle/commits?sha=gh-pages';
+        var element = "";
+
+        $.getJSON(url, function(data) {
+            console.log(data);
+
+            data.forEach(function(val, key) {
+                element += "<li>" + val.commit.message + " - " + misc.when(val.commit.committer.date) + "</li>";
+            });
+
+            $('.show-changes').html(element);
+        })
+    },
+
+    when: function(commitDate) {
+        var commitTime = new Date(commitDate).getTime();
+        var todayTime = new Date().getTime();
+
+        var differenceInDays = Math.floor(((todayTime - commitTime)/(24*3600*1000)));
+        if (differenceInDays === 0) {
+            var differenceInHours = Math.floor(((todayTime - commitTime)/(3600*1000)));
+            if (differenceInHours === 0) {
+                var differenceInMinutes = Math.floor(((todayTime - commitTime)/(600*1000)));
+                if (differenceInMinutes === 0) {
+
+                    return 'just now';
+                }
+
+                return 'about ' + differenceInMinutes + ' minutes ago';
+            }
+
+            return 'about ' + differenceInHours + ' hours ago';
+        } else if (differenceInDays == 1) {
+            return 'yesterday';
+        }
+        return differenceInDays + ' days ago';
     }
 }

@@ -53,3 +53,7 @@ body {
     border-width: 3px;
     color: rgb(255, 255, 255);
 }
+
+.changes {
+    padding: 0 15px;
+}

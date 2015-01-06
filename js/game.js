@@ -17,6 +17,7 @@ $(document).ready(function () {
     }
 
     misc.restoreGame();
+    misc.getCommits();
 
     evo.getButtons();
     evo.start();
@@ -63,13 +64,13 @@ $(document).ready(function () {
         e.preventDefault();
         $.jStorage.flush();
         location.reload();
-    })
+    });
 
     $('.start-modal').on('hidden.bs.modal', function () {
 
-    })
+    });
 
     $('.addPoints').click(function() {
         evo.addPoints();
-    })
+    });
 });
