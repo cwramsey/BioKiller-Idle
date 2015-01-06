@@ -16,6 +16,8 @@ $(document).ready(function () {
         evo.canContaminateAfter = 20;
     }
 
+    misc.restoreGame();
+
     evo.getButtons();
     evo.start();
     evo.makeGerm();
@@ -41,21 +43,28 @@ $(document).ready(function () {
 
     }, evo.time * 1000);
 
+    //save game every 30 seconds
+    var saveGame = setInterval(function() {
+        misc.saveGame();
+    }, 10 * 1000);
+
     //add the multiplier
     $('.addMultiplier').click(function (e) {
         e.preventDefault();
-
         evo.addMultiplier($(this).data('name'));
-
     });
 
     //add euipment
     $('.addEquipment').click(function (e) {
         e.preventDefault();
-
         evo.addEquipment('.' + $(this).data('name'));
-
     });
+
+    $('.reset').click(function(e) {
+        e.preventDefault();
+        $.jStorage.flush();
+        location.reload();
+    })
 
     $('.start-modal').on('hidden.bs.modal', function () {
 

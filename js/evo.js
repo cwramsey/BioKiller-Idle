@@ -26,6 +26,7 @@ evo = {
     germs: [],
     germ: {},
     buttons: [],
+    prices: [],
     germInterval: null,
     experimentInterval: null,
     equipmentInterval: null,
@@ -41,6 +42,10 @@ evo = {
             }
 
             evo.buttons.push($(this).data('name'));
+
+            if (evo.prices.length == 0) {
+                evo.prices.push($(this).data('cost'));
+            }
         });
 
         $('.actions .addEquipment').each(function (key, val) {
@@ -53,16 +58,23 @@ evo = {
             }
 
             evo.buttons.push($(this).data('name'));
+
+            if (evo.prices.length == 0) {
+                evo.prices.push($(this).data('cost'));
+            }
         });
     },
 
     //set the state of the buttons based on how many points the user has
     setButtonStates: function () {
         evo.buttons.forEach(function (val, key, array) {
+
             //if is equipment
             if ($('.' + val).hasClass('addEquipment')) {
                 //get cost of button
                 var cost = parseFloat($('.addEquipment.' + val).data('cost'));
+
+                evo.prices[key] = cost;
 
                 if (evo.totalPoints < cost) {
                     //disable the button
@@ -79,6 +91,8 @@ evo = {
             } else { //everything else
                 //get cost of button
                 var cost = parseFloat($('.addMultiplier.' + val).data('cost'));
+
+                evo.prices[key] = cost;
 
                 if (evo.totalPoints < cost) {
                     //disable the button
@@ -187,7 +201,16 @@ evo = {
     //increase the cost of the button purchase by 0.3%
     increaseCost: function (btn) {
         var oldCost = parseFloat($(btn).data('cost'));
-        var newCost = evo.roundIt(oldCost + (oldCost * 0.3));
+        newCost = evo.roundIt(oldCost + (oldCost * 0.3));
+
+        thisKey = btn.replace('.', '');
+
+        evo.buttons.forEach(function(val, key) {
+            if (val == thisKey) {
+                evo.prices[key] = newCost;
+                console.log(evo.prices[key]);
+            }
+        });
 
         $(btn).data('cost', newCost);
         $(btn + ' .cost').text(newCost);
@@ -346,7 +369,14 @@ evo = {
     },
 
     start: function () {
-        $('.start-modal').modal('show');
+        if (misc.isReturning == false) {
+            $('.start-modal').modal('show');
+        } else {
+            evo.buttons.forEach(function(val, key) {
+                $('.'+val).data('cost', evo.prices[key]);
+                $('.'+ val + ' .cost').text(evo.roundIt(evo.prices[key]));
+            });
+        }
 
         //setup experiment tooltips
         $('.experiment').tooltip({
