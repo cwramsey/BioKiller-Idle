@@ -15,7 +15,7 @@ evo = {
     equipmentTime: 0,
     contaminateWait: 0,
     canContaminateAfter: 300,
-    contaminateChance: 100,
+    contaminateChance: 50,
     contaminateMessages: [],
     experimentsDisabled: false,
     equipmentDisabled: false,
