@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
 
-    var dev = 0;
+    var dev = 1;
 
     if (dev != 1) {
         $('.dev').remove();

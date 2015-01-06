@@ -325,6 +325,7 @@ evo = {
     },
 
     runExperiment: function (experiment) {
+        currentExperiment = experiment;
         evo.experimentTime = $(experiment).data('time');
         evo.experimentProgress = 0;
         $('.experiment').prop('disabled', true);
@@ -355,7 +356,7 @@ evo = {
 
                 $('.experiment-percent').text(showPercent + '%');
             } else {
-                var add = parseFloat($(experiment).data('add'));
+                var add = parseFloat($(currentExperiment).data('add'));
 
                 clearInterval(evo.experimentInterval);
                 evo.experimentsDisabled = false;
