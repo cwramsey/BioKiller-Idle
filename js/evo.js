@@ -1,7 +1,7 @@
 /**
  * Created by chrisramsey on 1/4/15.
  */
-var evo = {
+evo = {
 
     //variables
     totalPoints: 0,
@@ -11,7 +11,14 @@ var evo = {
     totalGerms: 0,
     experimentProgress: 0,
     experimentTime: 0,
+    equipmentProgress: 0,
+    equipmentTime: 0,
+    contaminateWait: 0,
+    canContaminateAfter: 300,
+    contaminateChance: 1000,
+    contaminateMessages: [],
     experimentsDisabled: false,
+    equipmentDisabled: false,
     germX: [],
     germXanim: [],
     germY: [],
@@ -21,6 +28,7 @@ var evo = {
     buttons: [],
     germInterval: null,
     experimentInterval: null,
+    equipmentInterval: null,
 
     getButtons: function () {
         $('.actions .addMultiplier').each(function (key, val) {
@@ -29,7 +37,19 @@ var evo = {
             $(this).find('.add').text($(this).data('add'));
 
             if ($(this).has('.time').length) {
-                $(this).find('.time').text($(this).data('time'));
+                $(this).find('.time').text(misc.secondsTimeSpanToHMS($(this).data('time')));
+            }
+
+            evo.buttons.push($(this).data('name'));
+        });
+
+        $('.actions .addEquipment').each(function (key, val) {
+            $(this).find('.cost').text($(this).data('cost'));
+            $(this).find('.cost').digits();
+            $(this).find('.add').text($(this).data('add'));
+
+            if ($(this).has('.time').length) {
+                $(this).find('.time').text(misc.secondsTimeSpanToHMS($(this).data('time')));
             }
 
             evo.buttons.push($(this).data('name'));
@@ -39,22 +59,41 @@ var evo = {
     //set the state of the buttons based on how many points the user has
     setButtonStates: function () {
         evo.buttons.forEach(function (val, key, array) {
-            //get cost of button
-            var cost = parseFloat($('.addMultiplier.' + val).data('cost'));
+            //if is equipment
+            if ($('.' + val).hasClass('addEquipment')) {
+                //get cost of button
+                var cost = parseFloat($('.addEquipment.' + val).data('cost'));
 
-            if (evo.totalPoints < cost) {
-                //disable the button
-                $('.addMultiplier.' + val).prop('disabled', true).css('opacity', '0.5');
-            } else {
-                //enable the button
+                if (evo.totalPoints < cost) {
+                    //disable the button
+                    $('.addEquipment.' + val).prop('disabled', true).css('opacity', '0.5');
+                } else {
+                    //enable the button
 
-                if ($('.addMultiplier.' + val).hasClass('experiment') && evo.experimentsDisabled == true) {
+                    if ($('.addEquipment.' + val).hasClass('experiment') && evo.equipmentDisabled == true) {
+                        $('.addEquipment.' + val).prop('disabled', true).css('opacity', '0.5');
+                    } else {
+                        $('.addEquipment.' + val).prop('disabled', false).css('opacity', '1');
+                    }
+                }
+            } else { //everything else
+                //get cost of button
+                var cost = parseFloat($('.addMultiplier.' + val).data('cost'));
+
+                if (evo.totalPoints < cost) {
+                    //disable the button
                     $('.addMultiplier.' + val).prop('disabled', true).css('opacity', '0.5');
                 } else {
-                    $('.addMultiplier.' + val).prop('disabled', false).css('opacity', '1');
+                    //enable the button
+
+                    if ($('.addMultiplier.' + val).hasClass('experiment') && evo.experimentsDisabled == true) {
+                        $('.addMultiplier.' + val).prop('disabled', true).css('opacity', '0.5');
+                    } else {
+                        $('.addMultiplier.' + val).prop('disabled', false).css('opacity', '1');
+                    }
                 }
             }
-        })
+        });
     },
 
     addMultiplier: function (button) {
@@ -75,7 +114,9 @@ var evo = {
             evo.totalPoints = evo.roundIt(evo.totalPoints - cost);
 
             $('.totalPoints').text(evo.totalPoints);
+            $('.totalPoints').digits();
             $('.multiplier').text(evo.multiplier);
+            $('.multiplier').digits();
 
             evo.increaseCost(clicked);
         } else {
@@ -92,6 +133,55 @@ var evo = {
                 evo.makeGerm();
             }
         }
+    },
+
+    addEquipment: function(clicked) {
+        console.log(clicked);
+
+        evo.equipmentTime = $(clicked).data('time');
+        evo.equipmentProgress = 0;
+        $('.equipment').prop('disabled', true);
+        evo.equipmentDisabled = true;
+
+        evo.equipmentInterval = setInterval(function () {
+           evo.equipmentProgress++;
+
+            var percent = evo.equipmentProgress / evo.equipmentTime * 100;
+
+            console.log(evo.equipmentTime);
+
+            if (percent < 100) {
+                $('.equipment.progress-bar').width(percent + '%');
+
+                var showPercent = evo.roundIt(percent).toString();
+
+                if (showPercent.indexOf('.') == -1) {
+                    showPercent += '.00';
+                }
+
+                $('.equipment-percent').text(showPercent + '%');
+            } else {
+                clearInterval(evo.equipmentInterval);
+                evo.equipmentDisabled = false;
+                $('.equipment.progress-bar').width('0%');
+
+                var add = parseFloat($(clicked).data('add'));
+                var cost = parseFloat($(clicked).data('cost'));
+
+                if (evo.totalPoints >= cost) {
+                    evo.contaminateChance = evo.contaminateChance * add;
+                    evo.totalPoints = evo.roundIt(evo.totalPoints - cost);
+
+                    $('.totalPoints').text(evo.totalPoints);
+
+                    evo.increaseCost(clicked);
+                } else {
+                    //fail purchase
+                }
+
+                evo.setButtonStates();
+            }
+        }, evo.time * 1000);
     },
 
     //increase the cost of the button purchase by 0.3%
@@ -118,7 +208,13 @@ var evo = {
     makeGerm: function () {
         evo.totalGerms++;
         $('.totalGerms').text(evo.totalGerms);
-        thisTotal = evo.totalGerms;
+        $('.totalGerms').digits();
+
+        if (evo.totalGerms > 200) {
+            thisTotal = 200;
+        } else {
+            thisTotal = evo.totalGerms;
+        }
 
         (function() {
             var total = thisTotal,
@@ -143,12 +239,15 @@ var evo = {
 
             function blobLoaded(img) {
                 for (var i = 0; i < total; i++) {
+                    var rotate = Math.random() * 360;
+
                     var img = new fabric.Image(img.getElement(), {
                         left: Math.random() * maxx,
                         top: Math.random() * maxy,
                         selectable: false,
                         scaleX: 0.5,
-                        scaleY: 0.5
+                        scaleY: 0.5,
+                        angle: rotate
                     });
                     img.vx = 0;
                     img.vy = 0;
@@ -255,9 +354,51 @@ var evo = {
             title: "Beware: You can only run one experiment at a time...",
 
         });
+
+
+        //get contaminate messages
+        $.getJSON('data/contaminate.json').done(function(d) {
+            $.each(d.msg, function(key, val) {
+                evo.contaminateMessages.push(val);
+            });
+        })
     },
 
     addPoints: function () {
         evo.totalPoints = evo.totalPoints + 5000;
+    },
+
+    contaminate: function() {
+        var msg = evo.contaminateMessages[Math.floor(Math.random() * evo.contaminateMessages.length )];
+
+        $.growl({
+            title: "Your lab's been contaminated!",
+            message: msg
+        }, {
+            template: "<div data-growl='container' class='alert' role='alert'>\
+                        <button type='button' class='close' data-growl='dismiss'>\
+                        <span aria-hidden='true'>×</span>\
+                        <span class='sr-only'>Close</span>\
+                        </button>\
+                        <span data-growl='icon'></span>\
+                        <span class='growl-title' data-growl='title'></span><br />\
+                        <span data-growl='message'></span>\
+                        <a href='#' data-growl='url'></a>\
+                        </div>",
+            delay: 7000,
+            placement: {
+                from: "bottom",
+                align: "right"
+            },
+            type: 'growl',
+            animate: {
+                enter: 'animated fadeInRight',
+                exit: 'animated fadeOutRight'
+            }
+        });
+
+        evo.totalGerms = Math.round(evo.totalGerms / 2);
+        evo.multiplier = evo.roundIt(evo.multiplier / 1.2);
+        evo.makeGerm();
     }
 };
