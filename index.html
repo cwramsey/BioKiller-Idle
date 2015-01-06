@@ -15,7 +15,6 @@
 
     <!-- Custom styles for this template -->
     <link href="css/styles.css" rel="stylesheet">
-    <link href="css/bootstrap-tour.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -80,7 +79,7 @@
                     </small>
                 </button>
 
-                <button class="btn addMultiplier experiment pig" data-cost="8000" data-add="800" data-name="pig" data-time="120" disabled>
+                <button class="btn addMultiplier experiment pig" data-cost="8000" data-add="1100" data-name="pig" data-time="120" disabled>
                     Test On Pigs
                     <br />
                     <small>
@@ -90,7 +89,7 @@
                     </small>
                 </button>
 
-                <button class="btn addMultiplier experiment horse" data-cost="15000" data-add="1000" data-name="horse" data-time="240" disabled>
+                <button class="btn addMultiplier experiment horse" data-cost="25000" data-add="3000" data-name="horse" data-time="240" disabled>
                     Test On Horses
                     <br />
                     <small>
@@ -100,7 +99,7 @@
                     </small>
                 </button>
 
-                <button class="btn addMultiplier experiment human" data-cost="17000" data-add="1200" data-name="human" data-time="360" disabled>
+                <button class="btn addMultiplier experiment human" data-cost="100000" data-add="8000" data-name="human" data-time="360" disabled>
                     Test On Humans
                     <br />
                     <small>
@@ -112,7 +111,7 @@
             </div>
         </div>
 
-        <div class="dev panel panel-default">
+        <div class="dev panel panel-default" style="display: none;">
             <div class="panel-heading">Dev</div>
 
             <div class="panel-body">
@@ -181,7 +180,7 @@
                 </button>
             </div>
 
-            <canvas class="evo-canvas" width="640" height="480"></canvas>
+            <canvas id="evo-canvas" class="evo-canvas" width="640" height="480"></canvas>
 
         </div>
     </div>
@@ -212,22 +211,17 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<ol id="tour" style="display: none;" data-joyride>
-    <li data-class="totalPoints">You'll be using what we in the science community call "points" to upgrade your viral killer.</li>
-    <li data-class="multiplier">You can keep track of the points you earn every second here.</li>
-    <li data-class="dna">Upgrade your virus here by purchasing improvements to your BioKiller.</li>
-    <li data-class="dna">And, of course you'll need a way to know how deadly your virus is. Use experiments for huge boosts in points. But beware... it can take a while to finish your experiments.</li>
-    <li data-class="evo-canvas">Lastly, you can watch your little bugs run amock here.</li>
-</ol>
+<div style="display: none;">
+    <img src="images/germ.png" id="germ"/>
+</div>
 
 
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="js/jquery.js"></script>
-<script src="js/jcanvas.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
-<script src="js/bootstrap-tour.min.js"></script>
+<script src="js/fabric.js" ></script>
 <script src="js/evo.js"></script>
 <script src="js/game.js"></script>
 </body>

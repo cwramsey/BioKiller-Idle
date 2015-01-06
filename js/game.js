@@ -9,7 +9,9 @@ $(document).ready(function () {
     if (dev != 1) {
         $('.dev').remove();
     } else {
+        $('.dev').show();
         evo.totalPoints = 2000;
+        evo.time = 0.3;
     }
 
     evo.getButtons();

@@ -13,7 +13,11 @@ var evo = {
     experimentTime: 0,
     experimentsDisabled: false,
     germX: [],
+    germXanim: [],
     germY: [],
+    germYanim: [],
+    germs: [],
+    germ: {},
     buttons: [],
     germInterval: null,
     experimentInterval: null,
@@ -21,6 +25,7 @@ var evo = {
     getButtons: function () {
         $('.actions .addMultiplier').each(function (key, val) {
             $(this).find('.cost').text($(this).data('cost'));
+            $(this).find('.cost').digits();
             $(this).find('.add').text($(this).data('add'));
 
             if ($(this).has('.time').length) {
@@ -65,7 +70,7 @@ var evo = {
         var add = parseFloat($(clicked).data('add'));
         var cost = parseFloat($(clicked).data('cost'));
 
-        if (evo.totalPoints > cost) {
+        if (evo.totalPoints >= cost) {
             evo.multiplier = evo.roundIt(evo.multiplier + add);
             evo.totalPoints = evo.roundIt(evo.totalPoints - cost);
 
@@ -75,6 +80,7 @@ var evo = {
             evo.increaseCost(clicked);
         } else {
             //fail purchase
+            console.log('fail');
         }
 
         if ($(clicked).hasClass('reproduce')) {
@@ -95,6 +101,7 @@ var evo = {
 
         $(btn).data('cost', newCost);
         $(btn + ' .cost').text(newCost);
+        $(btn + ' .cost').digits();
 
         if (evo.totalPoints < newCost) {
             $(btn).prop('disabled', true).css('opacity', '0.5');
@@ -109,83 +116,87 @@ var evo = {
     },
 
     makeGerm: function () {
-        setTimeout(function () {
-            evo.totalGerms++;
-            var thisGerm = evo.totalGerms - 1;
-            $('.totalGerms').text(evo.totalGerms);
+        evo.totalGerms++;
+        $('.totalGerms').text(evo.totalGerms);
+        thisTotal = evo.totalGerms;
 
-            if (evo.totalGerms == 1) {
-                evo.germX[0] = 50;
-                evo.germY[0] = 50;
-            } else {
-                evo.germX[thisGerm] = evo.germX[thisGerm - 1];
-                evo.germY[thisGerm] = evo.germY[thisGerm - 1];
+        (function() {
+            var total = thisTotal,
+                blobs = new Array(total),
+                myfps = 60,
+                updateTime = 1000 / myfps,
+                mouse_pos = { x: 0, y: 0 },
+                canvas = this.__canvas = new fabric.Canvas('evo-canvas', {
+                    renderOnAddRemove: false,
+                    selection: false
+                }),
+                maxx = canvas.width,
+                maxy = canvas.height,
+                msg, startTime, prevTime, ms, frames;
 
-            }
+            //canvas.setBackgroundImage('../assets/bkg.jpg');
+            fabric.Image.fromURL('images/germ.png', blobLoaded);
 
-            var germ = $('canvas').drawImage({
-                source: 'images/germ.png',
-                layer: true,
-                name: 'germ' + thisGerm,
-                x: evo.germX[thisGerm],
-                y: evo.germY[thisGerm],
-                scale: 0.5,
-                fillStyle: "#fff"
+            canvas.on('mouse:move', function(options) {
+                mouse_pos = canvas.getPointer(options.e);
             });
 
-            clearInterval(evo.germInterval);
-
-            evo.germInterval = setInterval(function () {
-                evo.nextGermStep();
-
-                evo.germX.forEach(function (val, key) {
-                    $('canvas')
-                        .animateLayer('germ' + key, {
-                            x: evo.germX[key],
-                            y: evo.germY[key]
-                        }, 200);
-                });
-            }, 200);
-        }, 10);
-    },
-
-    nextGermStep: function () {
-        var canvasWidth = $('canvas').width();
-        var canvasHeight = $('canvas').height();
-        var forwardOrBackward = Math.floor((Math.random() * 2) + 1);
-
-        evo.germX.forEach(function (val, key) {
-            var x = evo.germX[key];
-            var y = evo.germY[key];
-
-            if (x < canvasWidth - 50 && x >= 50) {
-                if (forwardOrBackward == 1) {
-                    evo.germX[key] = evo.germX[key] + Math.floor((Math.random() * 30) + 1);
-                } else {
-                    evo.germX[key] = evo.germX[key] - Math.floor((Math.random() * 30) + 1);
+            function blobLoaded(img) {
+                for (var i = 0; i < total; i++) {
+                    var img = new fabric.Image(img.getElement(), {
+                        left: Math.random() * maxx,
+                        top: Math.random() * maxy,
+                        selectable: false,
+                        scaleX: 0.5,
+                        scaleY: 0.5
+                    });
+                    img.vx = 0;
+                    img.vy = 0;
+                    canvas.add(img);
+                    blobs[i] = img;
                 }
-            } else {
-                if (x >= canvasWidth - 50) {
-                    evo.germX[key] = evo.germX[key] - Math.floor((Math.random() * 30) + 1);
-                } else if (x <= 50) {
-                    evo.germX[key] = evo.germX[key] + Math.floor((Math.random() * 30) + 1);
-                }
+                animate();
             }
 
-            if (y < canvasHeight - 50 && y >= 50) {
-                if (forwardOrBackward == 1) {
-                    evo.germY[key] = evo.germY[key] + Math.floor((Math.random() * 30) + 1);
-                } else {
-                    evo.germY[key] = evo.germY[key] - Math.floor((Math.random() * 30) + 1);
+            function animate() {
+                for (var i = 0; i < total; i++) {
+                    var blob = blobs[i];
+                    var dx = blob.left - mouse_pos.x;
+                    var dy = blob.top - mouse_pos.y;
+                    var vx = blob.vx;
+                    var vy = blob.vy;
+
+                    if (dx * dx + dy * dy <= 10000) {
+                        vx += dx * 0.01;
+                        vy += dy * 0.01;
+                    }
+                    vx *= 0.95;
+                    vy *= 0.95;
+
+                    vx += Math.random() - 0.5;
+                    vy += Math.random() - 0.5;
+
+                    var x = blob.left += vx;
+                    var y = blob.top += vy;
+
+                    if (x < 0 || x > maxx || y < 0 || y > maxy) {
+                        var r = Math.atan2(y - maxy / 2, x - maxx / 2);
+                        vx = -Math.cos(r);
+                        vy = -Math.sin(r);
+                    }
+
+                    blob.vx = vx;
+                    blob.vy = vy;
                 }
-            } else {
-                if (y >= canvasHeight - 50) {
-                    evo.germY[key] = evo.germY[key] - Math.floor((Math.random() * 30) + 1);
-                } else if (y <= 50) {
-                    evo.germY[key] = evo.germY[key] + Math.floor((Math.random() * 30) + 1);
-                }
+
+                fabric.util.requestAnimFrame(animate, canvas.getElement());
+                canvas.renderAll();
             }
-        });
+        })();
+
+        $('.canvas-container:eq(1)').unwrap();
+        $('canvas:eq(1)').remove();
+
     },
 
     runExperiment: function (experiment) {
@@ -201,7 +212,14 @@ var evo = {
 
             if (percent < 100) {
                 $('.experiment.progress-bar').width(percent + '%');
-                $('.experiment-percent').text(evo.roundIt(percent) + '%');
+
+                var showPercent = evo.roundIt(percent).toString();
+
+                if (showPercent.indexOf('.') == -1) {
+                    showPercent += '.00';
+                }
+
+                $('.experiment-percent').text(showPercent + '%');
             } else {
                 clearInterval(evo.experimentInterval);
                 evo.experimentsDisabled = false;
@@ -210,7 +228,7 @@ var evo = {
                 var add = parseFloat($(experiment).data('add'));
                 var cost = parseFloat($(experiment).data('cost'));
 
-                if (evo.totalPoints > cost) {
+                if (evo.totalPoints >= cost) {
                     evo.multiplier = evo.multiplier + add;
                     evo.totalPoints = evo.totalPoints - cost;
                     evo.roundIt();
@@ -225,7 +243,7 @@ var evo = {
 
                 evo.setButtonStates();
             }
-        }, 100);
+        }, evo.time * 1000);
     },
 
     start: function () {
@@ -236,10 +254,10 @@ var evo = {
             placement: "right",
             title: "Beware: You can only run one experiment at a time...",
 
-        })
+        });
     },
 
-    addPoints: function() {
+    addPoints: function () {
         evo.totalPoints = evo.totalPoints + 5000;
     }
 };

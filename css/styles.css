@@ -15,12 +15,11 @@ body {
     padding: 15px;
 }
 
-.evo-canvas {
-    width: 640px;
+.canvas-container {
+    width: 100%;
     height: 480px;
+    margin: 0px auto;
     border: 1px solid #000;
-    margin: 25px auto;
-    display: block;
 }
 
 .progress.active .progress-bar {
