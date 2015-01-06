@@ -12,7 +12,7 @@ $(document).ready(function () {
         $('.dev').show();
         evo.totalPoints = 2000;
         evo.time = 0.3;
-        evo.contaminateChance = 10;
+        evo.contaminateChance = 5;
         evo.canContaminateAfter = 20;
     }
 
