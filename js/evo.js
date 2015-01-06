@@ -15,7 +15,7 @@ evo = {
     equipmentTime: 0,
     contaminateWait: 0,
     canContaminateAfter: 300,
-    contaminateChance: 1000,
+    contaminateChance: 100,
     contaminateMessages: [],
     experimentsDisabled: false,
     equipmentDisabled: false,
@@ -229,7 +229,10 @@ evo = {
     },
 
     makeGerm: function () {
-        evo.totalGerms++;
+        if (!misc.isReturning) {
+            evo.totalGerms++;
+        }
+
         $('.totalGerms').text(evo.totalGerms);
         $('.totalGerms').digits();
 
@@ -369,6 +372,8 @@ evo = {
     },
 
     start: function () {
+        evo.makeGerm();
+
         if (misc.isReturning == false) {
             $('.start-modal').modal('show');
         } else {
@@ -376,6 +381,7 @@ evo = {
                 $('.'+val).data('cost', evo.prices[key]);
                 $('.'+ val + ' .cost').text(evo.roundIt(evo.prices[key]));
             });
+            misc.isReturning = false;
         }
 
         //setup experiment tooltips

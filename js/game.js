@@ -20,7 +20,6 @@ $(document).ready(function () {
 
     evo.getButtons();
     evo.start();
-    evo.makeGerm();
 
     var gameLoop = setInterval(function () {
 
@@ -32,7 +31,7 @@ $(document).ready(function () {
         $('.totalPoints').digits();
         $('.multiplier').text(evo.multiplier);
         $('.multiplier').digits();
-        $('.contaminationChance').text((evo.time / evo.contaminateChance) * 100 + '%');
+        $('.contaminationChance').text(Math.round(((evo.time / evo.contaminateChance) * 100) * 100) / 100 + '%');
 
         evo.setButtonStates();
 
