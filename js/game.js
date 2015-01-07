@@ -11,7 +11,7 @@ $(document).ready(function () {
     } else {
         $('.dev').show();
         evo.totalPoints = 2000;
-        evo.time = 0.3;
+        evo.time = 0.2;
         evo.contaminateChance = 5;
         evo.canContaminateAfter = 20;
     }
@@ -22,7 +22,7 @@ $(document).ready(function () {
     evo.getButtons();
     evo.start();
 
-    var gameLoop = setInterval(function () {
+    evo.gameLoop = setInterval(function () {
 
         var doContaminate = Math.floor((Math.random() * evo.contaminateChance) + 1);
         evo.contaminateWait++;
@@ -36,7 +36,7 @@ $(document).ready(function () {
 
         evo.setButtonStates();
 
-        if (doContaminate == (evo.contaminateChance - 1) && evo.totalPoints > 1000 && evo.contaminateWait > evo.canContaminateAfter && evo.totalGerms > 5) {
+        if (doContaminate == (evo.contaminateChance - 1) && evo.totalPoints > 1000 && evo.contaminateWait > evo.canContaminateAfter) {
             evo.contaminate();
             evo.contaminateWait = 0;
         }
@@ -44,7 +44,7 @@ $(document).ready(function () {
     }, evo.time * 1000);
 
     //save game every 30 seconds
-    var saveGame = setInterval(function() {
+    evo.saveGame = setInterval(function() {
         misc.saveGame();
     }, 60 * 1000);
 

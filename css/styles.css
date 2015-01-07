@@ -57,3 +57,11 @@ body {
 .changes {
     padding: 0 15px;
 }
+
+.bio-actions button {
+    font-size: 0.8em;
+}
+
+.bio-actions .panel-body {
+    text-align: center;
+}

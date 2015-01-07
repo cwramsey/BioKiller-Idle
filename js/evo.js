@@ -30,12 +30,15 @@ evo = {
     germInterval: null,
     experimentInterval: null,
     equipmentInterval: null,
+    gameLoop: null,
+    saveGame: null,
 
     getButtons: function () {
         $('.actions .addMultiplier').each(function (key, val) {
             $(this).find('.cost').text($(this).data('cost'));
             $(this).find('.cost').digits();
             $(this).find('.add').text($(this).data('add'));
+            $(this).find('.add').digits();
 
             if ($(this).has('.time').length) {
                 $(this).find('.time').text(misc.secondsTimeSpanToHMS($(this).data('time')));
@@ -52,6 +55,7 @@ evo = {
             $(this).find('.cost').text($(this).data('cost'));
             $(this).find('.cost').digits();
             $(this).find('.add').text($(this).data('add'));
+            $(this).find('.add').digits();
 
             if ($(this).has('.time').length) {
                 $(this).find('.time').text(misc.secondsTimeSpanToHMS($(this).data('time')));
@@ -82,7 +86,7 @@ evo = {
                 } else {
                     //enable the button
 
-                    if ($('.addEquipment.' + val).hasClass('experiment') && evo.equipmentDisabled == true) {
+                    if (evo.equipmentDisabled == true) {
                         $('.addEquipment.' + val).prop('disabled', true).css('opacity', '0.5');
                     } else {
                         $('.addEquipment.' + val).prop('disabled', false).css('opacity', '1');
@@ -194,6 +198,31 @@ evo = {
                 }
 
                 evo.setButtonStates();
+
+                $.growl({
+                    title: "Your equipment has been delivered.",
+                    message: "EPS, the Evil Postal Service, has just delivered your order and contaminations will happen less frequently."
+                }, {
+                    template: "<div data-growl='container' class='alert' role='alert'>\
+                        <button type='button' class='close' data-growl='dismiss'>\
+                        <span aria-hidden='true'>×</span>\
+                        <span class='sr-only'>Close</span>\
+                        </button>\
+                        <span data-growl='icon'></span>\
+                        <span class='growl-title' data-growl='title'></span><br />\
+                        <span data-growl='message'></span>\
+                        <a href='#' data-growl='url'></a>\
+                        </div>",
+                    delay: 5000,
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                    animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                    }
+                });
             }
         }, evo.time * 1000);
     },
@@ -228,9 +257,11 @@ evo = {
         return num;
     },
 
-    makeGerm: function () {
+    makeGerm: function (fromContaminate) {
         if (!misc.isReturning) {
-            evo.totalGerms++;
+            if (!fromContaminate) {
+                evo.totalGerms++;
+            }
         }
 
         $('.totalGerms').text(evo.totalGerms);
@@ -363,9 +394,32 @@ evo = {
                 $('.experiment.progress-bar').width('0%');
 
                 evo.multiplier = evo.roundIt(evo.multiplier + add);
-
-
                 evo.setButtonStates();
+
+                $.growl({
+                    title: "Your experiment has finished.",
+                    message: "You've finished running your experiment. Your PPS has been upgraded."
+                }, {
+                    template: "<div data-growl='container' class='alert' role='alert'>\
+                        <button type='button' class='close' data-growl='dismiss'>\
+                        <span aria-hidden='true'>×</span>\
+                        <span class='sr-only'>Close</span>\
+                        </button>\
+                        <span data-growl='icon'></span>\
+                        <span class='growl-title' data-growl='title'></span><br />\
+                        <span data-growl='message'></span>\
+                        <a href='#' data-growl='url'></a>\
+                        </div>",
+                    delay: 5000,
+                    placement: {
+                        from: "bottom",
+                        align: "right"
+                    },
+                    animate: {
+                        enter: 'animated fadeInRight',
+                        exit: 'animated fadeOutRight'
+                    }
+                });
             }
         }, evo.time * 1000);
     },
@@ -432,8 +486,31 @@ evo = {
             }
         });
 
-        evo.totalGerms = Math.round(evo.totalGerms / 2);
+        if (evo.totalGerms == Math.round(evo.totalGerms / 1.2)) {
+            evo.totalGerms--;
+        } else {
+            evo.totalGerms = Math.round(evo.totalGerms / 1.2);
+        }
         evo.multiplier = evo.roundIt(evo.multiplier / 1.2);
-        evo.makeGerm();
+
+        $('.totalGerms').text(evo.totalGerms);
+        $('.multiplier').text(evo.multiplier);
+
+        if (evo.totalGerms < 1) {
+            evo.endGame();
+            return false;
+        }
+
+        evo.makeGerm(true);
+
+    },
+
+    endGame: function() {
+        console.log('end');
+        $.jStorage.flush();
+        clearInterval(evo.gameLoop);
+        clearInterval(evo.saveGame);
+
+        $('.end-modal').modal('show');
     }
 };
